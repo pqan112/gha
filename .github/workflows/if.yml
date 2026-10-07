@@ -1,0 +1,12 @@
+name: If demo
+on: push
+jobs:
+  demo:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Run if branch is main
+        if: github.ref == 'refs/heads/main'
+        run: echo "Deploy to main"
+      - name: Run if branch is develop
+        if: github.ref == 'refs/heads/develop'
+        run: echo "Deploy to develop"
