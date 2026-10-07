@@ -6,6 +6,11 @@ on:
         description: Choose the env to deploy
         required: true
         default: dev
+        type: "choice"
+        options:
+          - dev
+          - test
+          - prod
 
 jobs:
   inputs-test:
