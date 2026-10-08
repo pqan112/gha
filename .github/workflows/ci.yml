@@ -2,12 +2,12 @@ name: CI
 on:
   pull_request:
     branches:
-      - dev
-      - prod
+      - develop
+      - main
   push:
     branches:
-      - dev
-      - prod
+      - develop
+      - main
 
 jobs:
   ci:
