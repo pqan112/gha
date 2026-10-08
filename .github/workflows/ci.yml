@@ -13,6 +13,11 @@ jobs:
   ci:
     name: Lint, Test & Build
     runs-on: ubuntu-latest
+
+    # Thiết lập thư mục làm việc mặc định cho tất cả các 'run' steps
+    defaults:
+      run:
+        working-directory: ./vite-project
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -21,16 +26,26 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 24
-          cache: npm
+          cache: "pnpm"
+          # Bắt buộc phải chỉ định đường dẫn file lock vì project ở thư mục con
+          cache-dependency-path: "./vite-project/pnpm-lock.yaml"
 
       - name: Install dependencies
-        run: echo "install dependencies"
+        run: pnpm install --frozen-lockfile
 
       - name: Lint
-        run: echo "run formatter"
+        run: pnpm lint
 
       - name: Test
         run: echo "run test"
 
       - name: Build
-        run: echo "run build"
+        run: pnpm build
+
+      - name: Upload build artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: frontend-build
+          # Thuộc tính defaults.run.working-directory ở trên KHÔNG áp dụng cho 'uses'.
+          # Do đó, bạn phải ghi rõ đường dẫn thư mục dist từ root.
+          path: ./vite-project/dist

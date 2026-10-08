@@ -1,30 +1,41 @@
 name: Deploy - Develop
+
 on:
-  push:
+  workflow_run:
+    workflows: ["CI"] # Lắng nghe workflow có tên là "CI"
+    types:
+      - completed
     branches:
-      - develop
+      - dev # Chạy CD khi CI trên nhánh dev hoàn thành
+
 jobs:
   deploy:
     name: Deploy to Develop
     runs-on: ubuntu-latest
 
+    # Chỉ chạy deploy nếu CI thành công
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
     environment: develop
+
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
+      # Bước 1: Tải artifact từ workflow CI vừa hoàn thành
+      - name: Download build artifact
+        uses: actions/download-artifact@v4
         with:
-          node-version: 24
-          cache: npm
+          name: frontend-build
+          run-id: ${{ github.event.workflow_run.id }}
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          path: ./dist-deploy # Thư mục đích để lưu file tải về
 
-      - name: Install dependencies
-        run: echo "install dependencies"
-
-      - name: Build
-        run: echo "run build"
-
+      # Bước 2: Chạy lệnh Deploy thực tế
       - name: Deploy
         run: |
           echo "Deploying to Develop..."
+
+          # Liệt kê các file để kiểm tra xem tải về thành công chưa
+          ls -la ./dist-deploy
+
+          # ---
+          # TẠI ĐÂY: Thêm các lệnh deploy thực tế của bạn 
+          # Ví dụ: rsync, aws s3 sync, scp, docker push.
+          # ---
