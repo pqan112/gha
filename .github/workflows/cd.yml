@@ -6,7 +6,7 @@ on:
     types:
       - completed
     branches:
-      - dev # Chạy CD khi CI trên nhánh dev hoàn thành
+      - develop # Chạy CD khi CI trên nhánh dev hoàn thành
 
 jobs:
   deploy:
