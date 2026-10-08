@@ -1,0 +1,30 @@
+name: Deploy - Develop
+on:
+  push:
+    branches:
+      - develop
+jobs:
+  deploy:
+    name: Deploy to Develop
+    runs-on: ubuntu-latest
+
+    environment: develop
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+
+      - name: Install dependencies
+        run: echo "install dependencies"
+
+      - name: Build
+        run: echo "run build"
+
+      - name: Deploy
+        run: |
+          echo "Deploying to Develop..."
